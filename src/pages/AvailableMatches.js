@@ -136,14 +136,6 @@ const AvailableMatches = () => {
                 </span>
               </div>
               
-              <div className="match-image">
-                <img 
-                  src={selectedMatch.image} 
-                  alt={selectedMatch.title} 
-                  onError={handleImageError}
-                />
-              </div>
-              
               <div className="match-description">
                 <p>{selectedMatch.description}</p>
               </div>

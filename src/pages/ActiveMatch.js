@@ -42,88 +42,83 @@ const mockScenario = {
       round: 1,
       title: "Border Incident",
       description: "Military units from both sides engaged in a skirmish at the border.",
-      options: [
-        { id: 1, text: "Diplomatic Response", outcome: "Tensions reduced slightly." },
-        { id: 2, text: "Military Response", outcome: "Tensions escalated significantly." },
-        { id: 3, text: "Economic Sanctions", outcome: "Relations strained, economic impact on both sides." }
-      ]
+      timestamp: "Today"
     },
     {
       id: 2,
       round: 2,
-      title: "International Summit",
-      description: "The UN has called for an emergency meeting to address the crisis.",
-      options: [
-        { id: 1, text: "Present Evidence", outcome: "International support increased." },
-        { id: 2, text: "Boycott Summit", outcome: "International reputation damaged." },
-        { id: 3, text: "Form Coalition", outcome: "New allies joined your cause." }
-      ]
+      title: "Cyber Attack",
+      description: "Critical infrastructure has been compromised by a sophisticated cyber attack.",
+      timestamp: "Yesterday"
     },
     {
       id: 3,
-      round: 3,
-      title: "Cyber Attack",
-      description: "Critical infrastructure has been compromised by a sophisticated cyber attack.",
-      options: [
-        { id: 1, text: "Counter Attack", outcome: "Pending..." },
-        { id: 2, text: "Enhance Security", outcome: "Pending..." },
-        { id: 3, text: "Public Accusation", outcome: "Pending..." }
-      ]
+      round: 2,
+      title: "Diplomatic Tensions",
+      description: "Diplomatic relations are deteriorating. Both sides are mobilizing troops at the border.",
+      timestamp: "A week ago"
     }
-  ]
+  ],
+  actions: [
+    {
+      id: 1,
+      title: "A drone attack as retaliation",
+      votes: 60
+    },
+    {
+      id: 2,
+      title: "Call for a ceasefire",
+      votes: 5
+    },
+    {
+      id: 3,
+      title: "Meet the US president",
+      votes: 35
+    }
+  ],
+  scores: {
+    categories: [
+      { name: "Battlefield", ukraine: 40, russia: 60 },
+      { name: "Economy", ukraine: 45, russia: 55 },
+      { name: "PR", ukraine: 15, russia: 85 }
+    ]
+  }
 };
 
 const ActiveMatch = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const team = searchParams.get('team');
-  const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   
   const [scenario, setScenario] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [userTeam, setUserTeam] = useState(team);
+  const [chatMessages, setChatMessages] = useState([]);
   const [messageInput, setMessageInput] = useState('');
-  const [chatMessages, setChatMessages] = useState([
-    { id: 1, sender: "Diplomat1", text: "We should focus on diplomatic solutions.", timestamp: "10:30 AM" },
-    { id: 2, sender: "StrategyExpert", text: "I agree, but we need to maintain our military readiness.", timestamp: "10:32 AM" },
-    { id: 3, sender: "GeoPlayer", text: "What's our stance on the border incident?", timestamp: "10:35 AM" }
-  ]);
   
   useEffect(() => {
     // This would be an API call in a real application
     setTimeout(() => {
       setScenario(mockScenario);
       setLoading(false);
+      
+      // Mock chat messages
+      setChatMessages([
+        { id: 1, sender: "user1", text: "What's our next move?", timestamp: "10:15 AM" },
+        { id: 2, sender: "alonlavian", text: "I think we should focus on diplomatic solutions", timestamp: "10:17 AM" },
+        { id: 3, sender: currentUser?.username || "You", text: "Agreed, military action could escalate things", timestamp: "10:20 AM" },
+      ]);
     }, 1000);
-  }, [id]);
-  
-  const handleOptionSelect = (optionId) => {
-    setSelectedOption(optionId);
-  };
-  
-  const handleSubmitDecision = () => {
-    if (!selectedOption) return;
-    
-    // This would be an API call in a real application
-    alert(`Decision submitted: Option ${selectedOption}`);
-    setSelectedOption(null);
-  };
-  
-  const handleJoinTeam = (teamName) => {
-    // Disable team joining functionality for now
-    // setUserTeam(teamName);
-    console.log("Team joining is currently disabled");
-  };
+  }, [id, team, currentUser]);
   
   const handleSendMessage = (e) => {
     e.preventDefault();
-    if (!messageInput.trim()) return;
+    if (messageInput.trim() === '') return;
     
     const newMessage = {
       id: chatMessages.length + 1,
-      sender: currentUser.username,
+      sender: currentUser?.username || "You",
       text: messageInput,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     };
@@ -134,127 +129,110 @@ const ActiveMatch = () => {
   
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Loading scenario...</p>
+      <div className="match-container">
+        <div className="loading-indicator">
+          <div className="loading-spinner"></div>
+          <p>Loading scenario data...</p>
+        </div>
       </div>
     );
   }
-  
-  const currentEvent = scenario.events.find(event => event.round === scenario.currentRound);
   
   return (
     <div className="match-container">
       <div className="match-header">
         <h1>{scenario.title}</h1>
-        <div className="match-progress">
-          <span>Round {scenario.currentRound} of {scenario.totalRounds}</span>
-          <div className="progress-bar">
-            <div 
-              className="progress-fill" 
-              style={{ width: `${(scenario.currentRound / scenario.totalRounds) * 100}%` }}
-            ></div>
-          </div>
+        <div className="match-status">
+          Round {scenario.currentRound} of {scenario.totalRounds}
         </div>
       </div>
       
-      <div className="match-content">
-        <div className="scenario-description">
-          <h2>Current Situation</h2>
-          <p>{scenario.description}</p>
-          
-          {currentEvent && (
-            <div className="current-event">
-              <h3>{currentEvent.title}</h3>
-              <p>{currentEvent.description}</p>
-              
-              <div className="event-options">
-                <h4>Your Options:</h4>
-                {currentEvent.options.map(option => (
-                  <div 
-                    key={option.id}
-                    className={`option-card ${selectedOption === option.id ? 'selected' : ''}`}
-                    onClick={() => handleOptionSelect(option.id)}
-                  >
-                    <div className="option-text">{option.text}</div>
-                    <div className="option-outcome">
-                      Outcome: {option.outcome}
-                    </div>
-                  </div>
-                ))}
+      <div className="match-grid">
+        {/* Live Stream of Events */}
+        <div className="match-panel events-panel">
+          <h2>Live stream of events</h2>
+          <div className="events-timeline">
+            {scenario.events.map(event => (
+              <div key={event.id} className="event-item">
+                <div className="event-timestamp">{event.timestamp}</div>
+                <div className="event-content">
+                  <div className="event-title">{event.title}</div>
+                  <div className="event-description">{event.description}</div>
+                </div>
               </div>
-              
-              <button 
-                className="btn-submit-decision"
-                disabled={!selectedOption}
-                onClick={handleSubmitDecision}
-              >
-                Submit Decision
-              </button>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
         
-        <div className="match-sidebar">
-          <div className="teams-overview">
-            <h3>Teams</h3>
+        {/* Score Comparison */}
+        <div className="match-panel score-panel">
+          <h2>Score</h2>
+          <div className="score-comparison">
+            <div className="team-column ukraine">
+              <div className="team-header">Ukraine</div>
+            </div>
+            <div className="team-column russia">
+              <div className="team-header">Russia</div>
+            </div>
             
-            <div className="team-cards">
-              <div className="team-card">
-                <h4>{Object.keys(scenario.teams)[0]}</h4>
-                <p>Players: {scenario.teams[Object.keys(scenario.teams)[0]].members.length}/20</p>
-                <button 
-                  className="btn-join disabled" 
-                  onClick={() => {}} 
-                  disabled={true}
-                >
-                  Join Team (Disabled)
-                </button>
-              </div>
-              
-              <div className="team-card">
-                <h4>{Object.keys(scenario.teams)[1]}</h4>
-                <p>Players: {scenario.teams[Object.keys(scenario.teams)[1]].members.length}/20</p>
-                <button 
-                  className="btn-join disabled" 
-                  onClick={() => {}} 
-                  disabled={true}
-                >
-                  Join Team (Disabled)
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <div className="team-chat">
-            <h3>Team Chat</h3>
-            <div className="chat-messages">
-              {chatMessages.map(message => (
-                <div key={message.id} className={`chat-message ${message.sender === currentUser.username ? 'own-message' : ''}`}>
-                  <div className="message-sender">{message.sender}</div>
-                  <div className="message-text">{message.text}</div>
-                  <div className="message-time">{message.timestamp}</div>
+            {scenario.scores.categories.map((category, index) => (
+              <React.Fragment key={index}>
+                <div className="score-row">
+                  <div className="score-bar-wrapper ukraine">
+                    <div 
+                      className="score-bar ukraine" 
+                      style={{ width: `${category.ukraine}%` }}
+                    ></div>
+                  </div>
+                  <div className="category-label">{category.name}</div>
+                  <div className="score-bar-wrapper russia">
+                    <div 
+                      className="score-bar russia" 
+                      style={{ width: `${category.russia}%` }}
+                    ></div>
+                  </div>
                 </div>
-              ))}
-            </div>
-            <form className="chat-input" onSubmit={handleSendMessage}>
-              <input 
-                type="text" 
-                value={messageInput}
-                onChange={(e) => setMessageInput(e.target.value)}
-                placeholder="Type your message..."
-              />
-              <button type="submit">Send</button>
-            </form>
+              </React.Fragment>
+            ))}
           </div>
-          
-          <div className="social-sharing">
-            <h3>Share Your Achievements</h3>
-            <div className="sharing-buttons">
-              <button className="share-button twitter">Share on Twitter</button>
-              <button className="share-button facebook">Share on Facebook</button>
-              <button className="share-button discord">Share on Discord</button>
-            </div>
+        </div>
+        
+        {/* Group Chat */}
+        <div className="match-panel chat-panel">
+          <h2>Group chat</h2>
+          <div className="chat-messages">
+            {chatMessages.map(message => (
+              <div key={message.id} className={`chat-message ${message.sender === currentUser?.username ? 'own-message' : ''}`}>
+                <div className="message-sender">@{message.sender}</div>
+                <div className="message-text">{message.text}</div>
+              </div>
+            ))}
+          </div>
+          <form className="chat-input" onSubmit={handleSendMessage}>
+            <input 
+              type="text" 
+              value={messageInput}
+              onChange={(e) => setMessageInput(e.target.value)}
+              placeholder="Type your message..."
+            />
+            <button type="submit">Send</button>
+          </form>
+        </div>
+        
+        {/* Available Actions */}
+        <div className="match-panel actions-panel">
+          <h2>Set of tools</h2>
+          <div className="actions-list">
+            {scenario.actions.map(action => (
+              <div key={action.id} className="action-item">
+                <div className="action-title">{action.id}. {action.title}</div>
+                <div className="action-votes">
+                  <div className="vote-bar" style={{ width: `${action.votes}%` }}></div>
+                  <div className="vote-percentage">{action.votes}%</div>
+                  <div className="vote-number">{action.id}</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
