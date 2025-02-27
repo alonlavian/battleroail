@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import logo from '../assets/logo.jpg'; // Import the logo image
 import './Home.css';
 
 const Home = () => {
@@ -8,13 +9,21 @@ const Home = () => {
   
   return (
     <div className="home-container">
-      <div className="hero-section">
+      <div className="hero-section" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${logo})` }}>
         <div className="hero-content">
-          <h1>BattleRoail</h1>
-          <p>Test your diplomatic and strategic skills in realistic global crisis scenarios</p>
-          <div className="hero-buttons">
-            <Link to="/signup" className="btn-primary">Get Started</Link>
-          </div>
+          <h1 className="hero-title">BattleRoail</h1>
+          <p className="hero-subtitle">
+            Test your diplomatic and strategic skills in realistic global crisis scenarios
+          </p>
+          {currentUser ? (
+            <Link to="/matches" className="btn-primary hero-button">
+              FIND A MATCH
+            </Link>
+          ) : (
+            <Link to="/signup" className="btn-primary hero-button">
+              GET STARTED
+            </Link>
+          )}
         </div>
       </div>
       

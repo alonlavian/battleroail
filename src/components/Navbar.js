@@ -1,45 +1,48 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import logo from '../assets/logo.jpg'; // Import the logo image from src/assets/
 import './Navbar.css';
 
 const Navbar = () => {
   const { currentUser, logout } = useAuth();
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate('/login');
-    } catch (error) {
-      console.error('Failed to log out', error);
-    }
+  const location = useLocation();
+  
+  const isActive = (path) => {
+    return location.pathname === path ? 'active' : '';
   };
-
+  
   return (
     <nav className="navbar">
-      <div className="navbar-brand">
-        <Link to="/">
-          <img 
-            src="https://source.unsplash.com/random/40x40/?globe,world" 
-            alt="BattleRoail" 
-            className="navbar-logo" 
-          />
-          BattleRoail
-        </Link>
-      </div>
-      <div className="navbar-menu">
+      <Link to="/" className="navbar-brand">
+        <img src={logo} alt="BattleRoail Logo" className="navbar-logo" />
+        BattleRoail
+      </Link>
+      
+      <div className="navbar-links">
         {currentUser ? (
           <>
-            <Link to="/matches" className="navbar-item">Available Matches</Link>
-            <Link to="/leaderboard" className="navbar-item">Leaderboard</Link>
-            <Link to="/profile" className="navbar-item">Profile</Link>
-            <button onClick={handleLogout} className="navbar-item logout-btn">Logout</button>
+            <Link to="/matches" className={`navbar-link ${isActive('/matches')}`}>
+              Available Matches
+            </Link>
+            <Link to="/leaderboard" className={`navbar-link ${isActive('/leaderboard')}`}>
+              Leaderboard
+            </Link>
+            <Link to="/profile" className={`navbar-link ${isActive('/profile')}`}>
+              Profile
+            </Link>
+            <Link to="/" className="navbar-link" onClick={logout}>
+              Logout
+            </Link>
           </>
         ) : (
           <>
-            <Link to="/login" className="navbar-item">Login</Link>
-            <Link to="/signup" className="navbar-item">Sign Up</Link>
+            <Link to="/login" className={`navbar-link ${isActive('/login')}`}>
+              Login
+            </Link>
+            <Link to="/signup" className={`navbar-link ${isActive('/signup')}`}>
+              Sign Up
+            </Link>
           </>
         )}
       </div>
