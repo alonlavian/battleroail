@@ -81,6 +81,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .match-status-badge {
@@ -193,17 +195,19 @@
 
 .match-image {
   width: 100%;
-  height: 250px;
-  border-radius: 8px;
+  height: 300px;
   overflow: hidden;
+  border-radius: 8px;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .match-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .match-description {

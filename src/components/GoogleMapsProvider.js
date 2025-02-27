@@ -6,7 +6,7 @@ const GoogleMapsContext = createContext(null);
 
 // Configuration for Google Maps
 const libraries = ['places', 'marker'];
-const googleMapsApiKey = 'AIzaSyBNLrJhOMz6idD05pzfn5lhA-TAw-mAZCU';
+const googleMapsApiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY || '';
 const mapIds = ['5a38e7bd98e9ca5c'];
 
 // Create a provider component

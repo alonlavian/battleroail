@@ -90,6 +90,12 @@ const AvailableMatches = () => {
     setSelectedMatch(match);
   };
   
+  // Add a function to handle image errors
+  const handleImageError = (e) => {
+    // Replace with a default image if the original fails to load
+    e.target.src = "https://source.unsplash.com/random/400x200/?map,geography";
+  };
+  
   const handleJoinMatch = (matchId, team) => {
     navigate(`/match/${matchId}?team=${team}`);
   };
@@ -120,10 +126,7 @@ const AvailableMatches = () => {
         
         <div className="matches-list-section">
           {loading ? (
-            <div className="loading-indicator">
-              <div className="loading-spinner"></div>
-              <p>Loading scenarios...</p>
-            </div>
+            <div className="loading-indicator">Loading available matches...</div>
           ) : selectedMatch ? (
             <div className="match-details">
               <div className="match-header">
@@ -134,7 +137,11 @@ const AvailableMatches = () => {
               </div>
               
               <div className="match-image">
-                <img src={selectedMatch.image} alt={selectedMatch.title} />
+                <img 
+                  src={selectedMatch.image} 
+                  alt={selectedMatch.title} 
+                  onError={handleImageError}
+                />
               </div>
               
               <div className="match-description">
@@ -207,7 +214,11 @@ const AvailableMatches = () => {
                   onClick={() => handleMatchSelect(match)}
                 >
                   <div className="match-card-image">
-                    <img src={match.image} alt={match.title} />
+                    <img 
+                      src={match.image} 
+                      alt={match.title} 
+                      onError={handleImageError}
+                    />
                     <span className={`match-status-badge ${match.status.toLowerCase().replace(' ', '-')}`}>
                       {match.status}
                     </span>
