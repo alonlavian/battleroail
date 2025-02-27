@@ -1,0 +1,76 @@
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 2rem;
+  background: linear-gradient(rgba(10, 25, 41, 0.7), rgba(10, 25, 41, 0.8)),
+              url('https://source.unsplash.com/random/1920x1080/?global,politics');
+  background-size: cover;
+  background-position: center;
+}
+
+.signup-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.signup-card h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #0a1929;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #546e7a;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #cfd8dc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.alert {
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+  color: white;
+}
+
+.alert-danger {
+  background-color: #f44336;
+}
+
+.signup-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #546e7a;
+}
+
+.signup-footer a {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-footer a:hover {
+  text-decoration: underline;
+}
+
+.btn-primary {
+  width: 100%;
+}

@@ -1,0 +1,32 @@
+.match-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(rgba(10, 25, 41, 0.7), rgba(10, 25, 41, 0.8)),
+              url('https://source.unsplash.com/random/1920x1080/?crisis,war,diplomacy');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  border-radius: 8px;
+}
+
+.match-content {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  padding: 1.5rem;
+  color: #0a1929;
+}
+
+.btn-join.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-join.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
